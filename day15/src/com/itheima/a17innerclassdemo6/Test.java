@@ -19,21 +19,24 @@ public class Test {
         //要先写子类继承Animal类
         //再创建子类对象，把对象当作参数传递给method方法
         Dog d = new Dog();
-        d.eat();
-        //如果dog类只用一次，还要定义个类，很麻烦！
-        //所以使用匿名内部类！
+        method(d);
+        //如果dog类只用一次，还要定义个类，很麻烦
+
+        //所以使用匿名内部类，简化代码
         method(
                 new Animal() {
                     @Override
                     public void eat() {
-
+                        System.out.println("狗吃骨头");
                     }
-                }
+                }//相当于把匿名内部类对象当作参数传递给了Animal a
+                //而匿名内部类继承了Animal父类，所以匿名内部类对象是Animal
+                //的一个子类对象，【Animal a = 子类对象】形成多态
         );
 
     }
 
-    public static void method(Animal a) {
-        a.eat();
+    public static void method(Animal a) {//Animal a = 子类对象
+        a.eat();//多态：方法：编译看左边，运行看右边
     }
 }
