@@ -2,18 +2,31 @@ package com.itheima.ui;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
 //GameJFrame 继承 JFrame
 //setSize、setVisible都是继承了父类的方法
-public class GameJFrame extends JFrame implements KeyListener {
+public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     //创建一个二维数组
     //目的:管理图片数据
     //加载图片的时候，会根据二维数组中的数据进行顺序加载
     //成员位置
     int[][] data = new int[4][4];
+
+    //创建win数组，用来判断是否胜利
+    int[][] win = new int[][]{
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 0},
+    };
+
+    //定义计数器step
+    int step = 0;
 
     //空白块再二维数组中的位置，一个相对位置，相对于自己的位置
     int x = 0;
@@ -21,6 +34,14 @@ public class GameJFrame extends JFrame implements KeyListener {
 
     //定义一个变量path，记录当前图片的路径
     String path = "day16_puzzlegame\\image\\animal\\animal3\\";
+
+    //创建每个选项下的条目对象
+    JMenuItem changeImg = new JMenuItem("更换图片");
+    JMenuItem replayItem = new JMenuItem("重新游戏");
+    JMenuItem reLoginItem = new JMenuItem("重新登录");
+    JMenuItem closeItem = new JMenuItem("关闭游戏");
+
+    JMenuItem accountItem = new JMenuItem("公众号");
 
     //构造方法就是在创建对象的时候，用来初始化的！
     public GameJFrame() {
@@ -71,10 +92,9 @@ public class GameJFrame extends JFrame implements KeyListener {
                 //元素为0，记录位置
                 x = i / 4;
                 y = i % 4;
-            } else {
-                //元素不是0，再添加
-                data[i / 4][i % 4] = tempArr[i];
             }
+                //数据是0也添加
+                data[i / 4][i % 4] = tempArr[i];
         }
     }
 
@@ -83,6 +103,20 @@ public class GameJFrame extends JFrame implements KeyListener {
     private void initImage() {
         //清空原本已出现的所有图片
         this.getContentPane().removeAll();
+
+        //data[][] == win[][],展示胜利图标
+        if (victory()) {
+            //显示胜利图标
+            ImageIcon winIcon = new ImageIcon("day16_puzzlegame/image/win.png");
+            JLabel winJLabel = new JLabel(winIcon);
+            winJLabel.setBounds(203, 283, 197, 73);
+            this.getContentPane().add(winJLabel);
+        }
+
+        //计数器
+        JLabel stepCount = new JLabel("步数：" + step);
+        stepCount.setBounds(50, 30, 100, 20);
+        this.getContentPane().add(stepCount);
 
         //外循环 --- 初始化四行
         for (int i = 0; i < 4; i++) {
@@ -129,16 +163,18 @@ public class GameJFrame extends JFrame implements KeyListener {
 
         //创建菜单上两个选项的对象（功能 联系我们）
         JMenu functionJMenu = new JMenu("功能");
-        JMenu aboutUsJMenu = new JMenu("联系我们");
+        JMenu aboutUsJMenu = new JMenu("关于我们");
 
-        //创建每个选项下的条目对象
-        JMenuItem replayItem = new JMenuItem("重新游戏");
-        JMenuItem reLoginItem = new JMenuItem("重新登录");
-        JMenuItem closeItem = new JMenuItem("关闭游戏");
 
-        JMenuItem accountItem = new JMenuItem("公众号");
+        //条目绑定动作监听事件
+        changeImg.addActionListener(this);
+        replayItem.addActionListener(this);
+        reLoginItem.addActionListener(this);
+        closeItem.addActionListener(this);
+        accountItem.addActionListener(this);
 
         //条目放入选项
+        functionJMenu.add(changeImg);
         functionJMenu.add(replayItem);
         functionJMenu.add(reLoginItem);
         functionJMenu.add(closeItem);
@@ -189,6 +225,11 @@ public class GameJFrame extends JFrame implements KeyListener {
     //键盘某个键按住不松，会调用这个方法
     @Override
     public void keyPressed(KeyEvent e) {
+        //判断游戏是否胜利？胜利——此方法结束
+        if (victory()) {
+            return;
+        }
+
         int keyCode = e.getKeyCode();
         if (keyCode == 65) {//65=a,大小写通用
             //1.删除当前界面中的全部图片
@@ -212,6 +253,11 @@ public class GameJFrame extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        //判断游戏是否胜利？胜利——此方法结束
+        if (victory()) {
+            return;
+        }
+
         //对上下左右判断
         //左37 上38 右39 下40
         int keyCode = e.getKeyCode();
@@ -227,6 +273,8 @@ public class GameJFrame extends JFrame implements KeyListener {
             data[x][y] = data[x][y + 1];
             data[x][y + 1] = 0;
             y++;
+            //步数step++
+            step++;
             initImage();
         } else if (keyCode == 38) {
             System.out.println("向上移动");
@@ -246,7 +294,8 @@ public class GameJFrame extends JFrame implements KeyListener {
             data[x + 1][y] = 0;//相当于挪上去后，原位置元素被0元素替代
             //白块坐标往下一格，x++;白块向上一格，x--
             x++;
-
+            //步数step++
+            step++;
             //在坐标和内容都移动后
             //调用方法，按照最新的数字加载对应图片
             initImage();
@@ -261,6 +310,8 @@ public class GameJFrame extends JFrame implements KeyListener {
             data[x][y] = data[x][y - 1];
             data[x][y - 1] = 0;
             y--;
+            //步数step++
+            step++;
             initImage();
         } else if (keyCode == 40) {
             System.out.println("向下移动");
@@ -274,53 +325,85 @@ public class GameJFrame extends JFrame implements KeyListener {
             data[x][y] = data[x - 1][y];
             data[x - 1][y] = 0;//数字块原位置被0元素覆盖
             x--;
-
+            //步数step++
+            step++;
             //移动后，初始化方法，重新按照数字加载对应图片
             initImage();
         } else if (keyCode == 65) {
             //松开a,初始化图片
             //此时清空完整图片，按照二维数组的数据加载未完成的游戏图片顺序，加载背景图
             initImage();
-        } else if (keyCode == 119) {
-            //1.删除没拼好的图
-            this.getContentPane().removeAll();
-            //2.按顺序加载1-15图
-            int[][] newData = new int[4][4];
-            data = newData;
-            int tempNum = 1;
-            for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[i].length; j++) {
-                    data[i][j] = tempNum;
-                    tempNum++;
-                    if(tempNum == 15){
-                        return;
-                    }
+        } else if (keyCode == 87) {//作弊码W
+            //1.按顺序加载1-15图
+            data = new int[][]{
+                    {1, 2, 3, 4},
+                    {5, 6, 7, 8},
+                    {9, 10, 11, 12},
+                    {13, 14, 15, 0},
+            };
+            //2.重新加载 按照数组顺序
+            initImage();
+        }
+    }
+
+    //判断当前数组和win数组，方法
+    public boolean victory() {
+        for (int i = 0; i < data.length; i++) {
+            //data.length二维数组长度
+            //data[i]二维数组元素，即一维数组长度
+            for (int j = 0; j < data[i].length; j++) {
+                if (data[i][j] != win[i][j]) {
+                    //一个不等于，返回false
+                    return false;
                 }
             }
-            //3.设置图片大小？
-            //图片放入界面
-            //加载背景
-            //设置宽高位置
-            //背景放入界面
-            //刷新
+        }
+        //遍历结束都等于
+        return true;
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == replayItem) {
+            System.out.println("重新游戏");
+            //1.计数器清零
+            step = 0;
+            //2.打乱二维数组
+            initData();
+            //3.重新加载
+            initImage();
 
-            //1.删除当前界面中的全部图片
-            this.getContentPane().removeAll();
-            //2.加载一张完整图片
-            JLabel all = new JLabel(new ImageIcon(path + "all.jpg"));
-            //3.设置位置和宽高
-            all.setBounds(83, 134, 420, 420);
-            //4.完整图片放入界面中
-            this.getContentPane().add(all);
-            //5.加载背景图片
-            JLabel background = new JLabel(new ImageIcon("day16_puzzlegame\\image\\background.png"));
-            //6.设置宽高和位置
-            background.setBounds(40, 40, 508, 560);
-            //7.图片放入界面
-            this.getContentPane().add(background);
-            //8.刷新界面,不刷新还是最初的图片顺序
-            this.getContentPane().repaint();
+        } else if (source == reLoginItem) {
+            System.out.println("重新登录");
+            //1.关闭当前游戏界面
+            this.setVisible(false);
+            //2.打开游戏界面
+            new LoginJFrame();
+        } else if (source == closeItem) {
+            System.out.println("关闭游戏");
+            System.exit(0);
+        } else if (source == accountItem) {
+            System.out.println("公众号");
+            //1.创建弹窗JDialog
+            JDialog jDialog = new JDialog();
+            //2.ImageIcon和JLabel
+            ImageIcon imageIcon = new ImageIcon("day16_puzzlegame/image/about.png");
+            JLabel jLabel = new JLabel(imageIcon);
+            //3.设置jLabel位置和宽高
+            jLabel.setBounds(0,0,258,258);
+            //4.图片添加到弹窗
+            jDialog.getContentPane().add(jLabel);
+            //5.设置弹窗大小
+            jDialog.setSize(344,344);
+            //6.弹窗置顶
+            jDialog.setAlwaysOnTop(true);
+            //7.弹窗居中,否则在屏幕左上角
+            jDialog.setLocationRelativeTo(null);
+            //8.弹窗不关闭则无法操作下面界面
+            jDialog.setModal(true);
+            //9.弹窗显示出来
+            jDialog.setVisible(true);
         }
     }
 }
