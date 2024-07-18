@@ -9,8 +9,10 @@ public class A01_BinarySearchDemo_2 {
         //需求：定义一个方法利用二分查找，查询某个元素在数组中的索引
         //数据如下：{7, 23, 79, 81, 103, 127, 131, 147}
 
+
         int[] arr = {7, 23, 79, 81, 103, 127, 131, 147};
-        System.out.println(binarySearch(arr, 131));
+        System.out.println(binarySearch(arr, 81));
+
 
     }
 
