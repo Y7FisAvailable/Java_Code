@@ -20,10 +20,9 @@ public class A04_RecursionDemo2 {
         System.out.println(getSum(100));//5050
 
     }
-
-
     public static int getSum(int number){
         //出口，如果number == 1
+        //如果求50 - 100的累加，if判断number = 50即可
         if(number == 1){
             return  1;
         }
@@ -31,4 +30,5 @@ public class A04_RecursionDemo2 {
         //规律，如果numbert不是1呢？
         return number + getSum( number - 1);//100 + 99 +...+ 2 + getSum(2 - 1) = ???
     }
+
 }

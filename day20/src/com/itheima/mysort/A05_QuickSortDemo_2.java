@@ -13,7 +13,7 @@ public class A05_QuickSortDemo_2 {
 
         //int[] arr = {6, 1, 2, 7, 9, 3, 4, 5, 10, 8};
 
-        int[] arr = new int[10000000];
+        int[] arr = new int[1000000];
         Random r = new Random();
         for (int i = 0; i < arr.length; i++) {
             arr[i] = r.nextInt();//不写范围默认在int范围中
@@ -26,6 +26,9 @@ public class A05_QuickSortDemo_2 {
         System.out.println(e - s);
         //课堂练习：
         //我们可以利用相同的办法去测试一下，选择排序，冒泡排序以及插入排序运行的效率
+        //快速排序：2
+        //冒泡排序：估计得几分钟= =
+        //插入排序：几分钟= =
         //得到一个结论：快速排序真的非常快。
 
         /*

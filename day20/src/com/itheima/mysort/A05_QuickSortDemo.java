@@ -1,7 +1,5 @@
 package com.itheima.mysort;
 
-import java.util.Arrays;
-
 public class A05_QuickSortDemo {
     public static void main(String[] args) {
         System.out.println(Integer.MAX_VALUE);
@@ -16,9 +14,9 @@ public class A05_QuickSortDemo {
         int[] arr = {1,1, 6, 2, 7, 9, 3, 4, 5, 1,10, 8};
 
 
-        //int[] arr = new int[1000000];
+        /*int[] arr = new int[1000000];
 
-       /* Random r = new Random();
+        Random r = new Random();
         for (int i = 0; i < arr.length; i++) {
             arr[i] = r.nextInt();
         }*/
@@ -28,16 +26,16 @@ public class A05_QuickSortDemo {
         quickSort(arr, 0, arr.length - 1);
         long end = System.currentTimeMillis();
 
-        System.out.println(end - start);//149
+        //System.out.println(end - start);//149
 
-        System.out.println(Arrays.toString(arr));
+        //System.out.println(Arrays.toString(arr));
         //课堂练习：
         //我们可以利用相同的办法去测试一下，选择排序，冒泡排序以及插入排序运行的效率
         //得到一个结论：快速排序真的非常快。
 
-       /* for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i] + " ");
-        }*/
+        }
 
     }
 
@@ -71,7 +69,6 @@ public class A05_QuickSortDemo {
                 }
                 end--;
             }
-            System.out.println(end);
             //利用start，从前往后找，找比基准数大的数字
             while(true){
                 if(end <= start || arr[start] > baseNumber){
