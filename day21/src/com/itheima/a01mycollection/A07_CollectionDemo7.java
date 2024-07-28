@@ -20,6 +20,8 @@ public class A07_CollectionDemo7 {
         coll.add("zhangsan");
         coll.add("lisi");
         coll.add("wangwu");
+
+
         //2.利用匿名内部类的形式
         //底层原理：
         //其实也会自己遍历集合，依次得到每一个元素
@@ -33,10 +35,8 @@ public class A07_CollectionDemo7 {
             }
         });
 
-        //lambda表达式
+        //3.利用lambda表达式
         //coll.forEach(s -> System.out.println(s));
-        //coll.forEach(s -> System.out.println(s));
-
-
+        coll.forEach(s -> System.out.println(s));
     }
 }
