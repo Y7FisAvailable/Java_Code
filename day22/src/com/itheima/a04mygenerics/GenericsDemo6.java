@@ -4,12 +4,9 @@ import java.util.ArrayList;
 
 public class GenericsDemo6 {
     public static void main(String[] args) {
-        /*
-        *   需求：
+        /*需求：
         *       定义一个方法，形参是一个集合，但是集合中的数据类型不确定。
-        *
-        * */
-
+        */
 
         //创建集合的对象
         ArrayList<Ye> list1 = new ArrayList<>();
@@ -20,21 +17,18 @@ public class GenericsDemo6 {
 
         method(list1);
         method(list2);
-        //method(list3);
-
+        method(list3);
 
         //method(list4);
-
-
     }
 
     /*
      * 此时，泛型里面写的是什么类型，那么只能传递什么类型的数据。
      * 弊端：
      *      利用泛型方法有一个小弊端，此时他可以接受任意的数据类型
-     *      Ye  Fu   Zi    Student
+     *      Ye  Fu   Zi   Student
      *
-     * 希望：本方法虽然不确定类型，但是以后我希望只能传递Ye Fu Zi
+     * 希望：本方法虽然不确定类型，但是以后我希望只能传递Ye Fu Zi这个继承体系
      *
      * 此时我们就可以使用泛型的通配符：
      *      ?也表示不确定的类型
@@ -49,7 +43,7 @@ public class GenericsDemo6 {
      *      关键点：可以限定类型的范围。
      *
      * */
-    public static void method(ArrayList<? super Fu> list) {
+    public static void method(ArrayList<? extends Ye> list) {
 
     }
 }
