@@ -46,9 +46,8 @@ public class A07_TreeSetDemo4 {
 
         //4.打印集合
         //System.out.println(ts);
-        for (com.itheima.a06myset.Student2 t : ts) {
-            System.out.println(t);
+        for (Student2 t : ts) {
+            System.out.println("总分：" + (t.getChinese() + t.getEnglish() + t.getMath()) + "," + t);
         }
-
     }
 }
